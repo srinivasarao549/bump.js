@@ -3,7 +3,7 @@
  */
 (function( window, Bump ) {
 
-  Bump.SIMD_EPSILON = Math.pow(2, -53);
+  Bump.SIMD_EPSILON = Math.pow(2, -52);
 
   Bump.Vector3 = Bump.type( {
     typeMembers : {

@@ -1,18 +1,45 @@
 module( 'Bump.Vector3' );
 
 test( 'Bump.Vector3 exists', 1, function() {
-    ok( Bump.Vector3, 'Bump.Vector3 exists' );
+  ok( Bump.Vector3, 'Bump.Vector3 exists' );
 } );
 
-test( 'functions exist', 8, function() {
-    ok( Bump.Vector3.create, 'create exists' );
-    ok( Bump.Vector3.add, 'add exists' );
-    ok( Bump.Vector3.subtract, 'subtract exists' );
-    ok( Bump.Vector3.multiply, 'multiply exists' );
-    ok( Bump.Vector3.divide, 'divide exists' );
-    ok( Bump.Vector3.dot, 'dot exists' );
-    ok( Bump.Vector3.length2, 'length2 exists' );
-    ok( Bump.Vector3.length, 'length exists' );
+test( 'functions exist', 35, function() {
+  ok( Bump.Vector3.create, 'create exists' );
+  ok( Bump.Vector3.add, 'add exists' );
+  ok( Bump.Vector3.subtract, 'subtract exists' );
+  ok( Bump.Vector3.multiply, 'multiply exists' );
+  ok( Bump.Vector3.scale, 'scale exists' );
+  ok( Bump.Vector3.divide, 'divide exists' );
+  ok( Bump.Vector3.divideElements, 'divideElements exists' );
+  ok( Bump.Vector3.dot, 'dot exists' );
+  ok( Bump.Vector3.length2, 'length2 exists' );
+  ok( Bump.Vector3.length, 'length exists' );
+  ok( Bump.Vector3.distance2, 'distance2 exists' );
+  ok( Bump.Vector3.distance, 'distance exists' );
+  ok( Bump.Vector3.safeNormalize, 'safeNormalize exists' );
+  ok( Bump.Vector3.normalize, 'normalize exists' );
+  ok( Bump.Vector3.normalized, 'normalized exists' );
+  ok( Bump.Vector3.rotate, 'rotate exists' );
+  ok( Bump.Vector3.angle, 'angle exists' );
+  ok( Bump.Vector3.absolute, 'absolute exists' );
+  ok( Bump.Vector3.cross, 'cross exists' );
+  ok( Bump.Vector3.triple, 'triple exists' );
+  ok( Bump.Vector3.minAxis, 'minAxis exists' );
+  ok( Bump.Vector3.maxAxis, 'maxAxis exists' );
+  ok( Bump.Vector3.furthestAxis, 'furthestAxis exists' );
+  ok( Bump.Vector3.closestAxis, 'closestAxis exists' );
+  ok( Bump.Vector3.setInterpolate3, 'setInterpolate3 exists' );
+  ok( Bump.Vector3.lerp, 'lerp exists' );
+  ok( Bump.Vector3.equal, 'equal exists' );
+  ok( Bump.Vector3.notEqual, 'notEqual exists' );
+  ok( Bump.Vector3.setMax, 'setMax exists' );
+  ok( Bump.Vector3.setMin, 'setMin exists' );
+  ok( Bump.Vector3.setValue, 'setValue exists' );
+  ok( Bump.Vector3.getSkewSymmetricMatrix, 'getSkewSymmetricMatrix exists' );
+  ok( Bump.Vector3.setZero, 'setZero exists' );
+  ok( Bump.Vector3.isZero, 'isZero exists' );
+  ok( Bump.Vector3.fuzzyZero, 'fuzzyZero exists' );
 } );
 
 module( 'Bump.Vector3.create' );
@@ -31,47 +58,92 @@ test( 'add function', 5, function() {
   ret;
 
   ret = Bump.Vector3.add( v1, v2, v3 );
-  equal( ret, v3, 'with destination : return value reflects destination' );
-  deepEqual(v1, Bump.Vector3.create( 1, 2, 3 ), 'with destination : original vec unchanged' );
+  equal( ret, v3, 'with destination : return value references destination' );
+  deepEqual(v1, Bump.Vector3.create( 1, 2, 3 ), 'with destination : original unchanged' );
   deepEqual(v3, Bump.Vector3.create( 2, 0, 3 ), 'with destination : correct result');
 
   ret = Bump.Vector3.add(v1, v2);
-  equal( ret, v1, 'in place : return value correct');
+  equal( ret, v1, 'in place : return value references original');
   deepEqual(v1, Bump.Vector3.create( 2, 0, 3 ), 'in place : correct result');
 } );
 
-test( 'subtract function', 2, function() {
+test( 'subtract function', 5, function() {
   var v1 = Bump.Vector3.create( 1, 2, 3 ),
   v2 = Bump.Vector3.create( 1, -2, 0 ),
-  v3 = Bump.Vector3.create();
+  v3 = Bump.Vector3.create(),
+  ret;
 
-  Bump.Vector3.subtract( v1, v2, v3 );
-  deepEqual( v3, Bump.Vector3.create( 0, 4, 3 ), 'subtract with destination works');
+  ret = Bump.Vector3.subtract( v1, v2, v3 );
+  equal( ret, v3, 'with destination : return value references destination' );
+  deepEqual( v1, Bump.Vector3.create( 1, 2, 3 ), 'with destination : original unchanged' );
+  deepEqual( v3, Bump.Vector3.create( 0, 4, 3 ), 'with destination : correct result');
 
-  Bump.Vector3.subtract( v1, v2 );
-  deepEqual( v1, Bump.Vector3.create( 0, 4, 3 ), 'subtract in place works');
+  ret = Bump.Vector3.subtract( v1, v2 );
+  equal( ret, v1, 'in place : return value references original' );
+  deepEqual( v1, Bump.Vector3.create( 0, 4, 3 ), 'in place : correct result');
 } );
 
-test( 'multiply function', 2, function() {
+test( 'multiply function', 5, function() {
   var v1 = Bump.Vector3.create( 1, 2, 3 ),
-  v2 = Bump.Vector3.create();
+  v2 = Bump.Vector3.create(),
+  ret;
 
-  Bump.Vector3.multiply( v1, 2, v2 );
-  deepEqual(v2,  Bump.Vector3.create( 2, 4, 6 ), 'multiply with destination works');
+  ret = Bump.Vector3.multiply( v1, 2, v2 );
+  equal( ret, v2, 'with destination : return value references destination' );
+  deepEqual( v1, Bump.Vector3.create( 1, 2, 3 ), 'with destination : original unchanged' );
+  deepEqual( v2,  Bump.Vector3.create( 2, 4, 6 ), 'with destination : correct result' );
 
-  Bump.Vector3.multiply( v1, 2 );
-  deepEqual(v1, Bump.Vector3.create( 2, 4, 6 ), 'multiply in place works');
+  ret = Bump.Vector3.multiply( v1, 2 );
+  equal( ret, v1, 'in place : return value references original' );
+  deepEqual( v1, Bump.Vector3.create( 2, 4, 6 ), 'in place: correct result' );
 } );
 
-test( 'divide function', 2, function() {
+test( 'scale function', 5, function() {
   var v1 = Bump.Vector3.create( 1, 2, 3 ),
-  v2 = Bump.Vector3.create();
+  v2 = Bump.Vector3.create( 2, -1, 0 ),
+  v3 = Bump.Vector3.create(),
+  ret;
 
-  Bump.Vector3.divide( v1, 2, v2 );
-  deepEqual(v2,  Bump.Vector3.create( 0.5, 1, 1.5 ), 'divide with destination works');
+  ret = Bump.Vector3.scale( v1, v2, v3 );
+  equal( ret, v3, 'with destination : return value references destination' );
+  deepEqual( v1, Bump.Vector3.create( 1, 2, 3 ), 'with destination : original unchanged' );
+  deepEqual( v3,  Bump.Vector3.create( 2, -2, 0 ), 'with destination : correct result' );
 
-  Bump.Vector3.divide( v1, 2 );
-  deepEqual(v1, Bump.Vector3.create( 0.5, 1, 1.5 ), 'divide in place works');
+  ret = Bump.Vector3.scale( v1, v2 );
+  equal( ret, v1, 'in place : return value references original' );
+  deepEqual( v1, Bump.Vector3.create( 2, -2, 0 ), 'in place: correct result' );
+} );
+
+
+test( 'divide function', 5, function() {
+  var v1 = Bump.Vector3.create( 1, 2, 3 ),
+  v2 = Bump.Vector3.create(),
+  ret;
+
+  ret = Bump.Vector3.divide( v1, 2, v2 );
+  equal( ret, v2, 'with destination : return value references destination' );
+  deepEqual( v1, Bump.Vector3.create( 1, 2, 3 ), 'with destination : original unchanged' );
+  deepEqual( v2,  Bump.Vector3.create( 0.5, 1, 1.5 ), 'with destination : correct result' );
+
+  ret = Bump.Vector3.divide( v1, 2 );
+  equal( ret, v1, 'in place : return value references original' );
+  deepEqual( v1, Bump.Vector3.create( 0.5, 1, 1.5 ), 'in place : correct result');
+} );
+
+test( 'divideElements function', 5, function() {
+  var v1 = Bump.Vector3.create( 1, 2, 3 ),
+  v2 = Bump.Vector3.create(2, 1, -3),
+  v3 = Bump.Vector3.create(),
+  ret;
+
+  ret = Bump.Vector3.divideElements( v1, v2, v3 );
+  equal( ret, v3, 'with destination : return value references destination' );
+  deepEqual( v1, Bump.Vector3.create( 1, 2, 3 ), 'with destination : original unchanged' );
+  deepEqual( v3,  Bump.Vector3.create( 0.5, 2, -1 ), 'with destination : correct result' );
+
+  ret = Bump.Vector3.divideElements( v1, v2 );
+  equal( ret, v1, 'in place : return value references original' );
+  deepEqual( v1, Bump.Vector3.create( 0.5, 2, -1 ), 'in place : correct result');
 } );
 
 test( 'dot function', 1, function() {
@@ -112,29 +184,40 @@ test( 'safeNormalize', 3, function() {
   deepEqual( Bump.Vector3.safeNormalize( v3 ), Bump.Vector3.create( 1, 0, 0 ) );
 } );
 
-test( 'normalize', 2, function() {
+test( 'normalize', 4, function() {
   var v1 = Bump.Vector3.create( 2, 0, 0 ),
-  v2 = Bump.Vector3.create( 0, 1, -1 );
+  v2 = Bump.Vector3.create( 0, 1, -1 ),
+  ret;
 
-  deepEqual( Bump.Vector3.normalize( v1 ), Bump.Vector3.create( 1, 0, 0 ) );
-  deepEqual( Bump.Vector3.normalize( v2 ), Bump.Vector3.create( 0, 1/Math.sqrt( 2 ), -1/Math.sqrt( 2 ) ) );
+  ret = Bump.Vector3.normalize( v1 );
+
+  equal( ret, v1, 'return value references original vector correctly' );
+  deepEqual( v1, Bump.Vector3.create( 1, 0, 0 ), 'correct result' );
+
+  ret = Bump.Vector3.normalize( v2 );
+
+  equal( ret, v2, 'return value references original vector correctly' );
+  deepEqual( v2, Bump.Vector3.create( 0, 1/Math.sqrt( 2 ), -1/Math.sqrt( 2 ) ), 'correct result' );
 } );
 
-test( 'normalized', 4, function() {
+test( 'normalized', 6, function() {
   var v1 = Bump.Vector3.create( 2, 0, 0 ),
   v2 = Bump.Vector3.create( 0, 1, -1 ),
   v3 = Bump.Vector3.create(),
-  v4,
-  n1 = Bump.Vector3.create( 1, 0, 0 ),
-  n2 = Bump.Vector3.create( 0, 1/Math.sqrt( 2 ), -1/Math.sqrt( 2 ) );
+  ret;
 
-  Bump.Vector3.normalized( v1, v3 );
-  v4 = Bump.Vector3.normalized( v2, Bump.Vector3.create() );
+  ret = Bump.Vector3.normalized( v1, v3 );
 
-  deepEqual( v1, Bump.Vector3.create( 2, 0, 0 ) );
-  deepEqual( v2, Bump.Vector3.create( 0, 1, -1 ) );
-  deepEqual( v3, n1 );
-  deepEqual( v4, n2 );
+  equal( ret, v3, 'with destination : return value references destination' );
+  deepEqual( v1, Bump.Vector3.create( 2, 0, 0 ), 'with destination : original unchanged' );
+  deepEqual( v3, Bump.Vector3.create( 1, 0, 0 ), 'with destination : correct result' );
+
+  v4 = Bump.Vector3.normalized( v2 );
+
+  notEqual( v2, v4, 'without destination : return value references newly created vector3' );
+  deepEqual( v2, Bump.Vector3.create( 0, 1, -1 ), 'without destination : original unchanged' );
+  deepEqual( v4, Bump.Vector3.create( 0, 1/Math.sqrt( 2 ), -1/Math.sqrt( 2 ) ),
+             'without destination : correct result' );
 } );
 
 // definitely should add more tests for this one
@@ -146,34 +229,47 @@ test( 'rotate', 9, function() {
 
   ret = Bump.Vector3.rotate( v1, zAxis, Math.PI/2, vRot );
 
-  equal( ret, vRot );
-  deepEqual( v1, Bump.Vector3.create( 1, 0, 0 ) );
-  ok( Math.abs( vRot[0] ) < Bump.SIMD_EPSILON, 'vRot[0] is close to 0' );
-  ok( Math.abs( vRot[1] - 1 ) < Bump.SIMD_EPSILON, 'vRot[1] is close to 1' );
-  ok( Math.abs( vRot[0] ) < Bump.SIMD_EPSILON, 'vRot[2] is close to 0' );
+  equal( ret, vRot, 'with destination : return value references destination' );
+  deepEqual( v1, Bump.Vector3.create( 1, 0, 0 ), 'with destination : original unchanged' );
+  ok( Math.abs( vRot[0] ) < Bump.SIMD_EPSILON, 'with destination : correct result : x is close to 0' );
+  ok( Math.abs( vRot[1] - 1 ) < Bump.SIMD_EPSILON, 'with destination : correct result : y is close to 1' );
+  ok( Math.abs( vRot[0] ) < Bump.SIMD_EPSILON, 'with destination : correct result: z is close to 0' );
 
   ret = Bump.Vector3.rotate( v1, zAxis, Math.PI );
 
-  equal( ret, v1 );
-  ok( Math.abs( v1[0] + 1 ) < Bump.SIMD_EPSILON, 'v1[0] is close to -1' );
-  ok( Math.abs( v1[1] ) < Bump.SIMD_EPSILON, 'v1[1] is close to 0' );
-  ok( Math.abs( v1[2] ) < Bump.SIMD_EPSILON, 'v1[2] is close to 0' );
+  equal( ret, v1, 'in place : return value references original' );
+  ok( Math.abs( v1[0] + 1 ) < Bump.SIMD_EPSILON, 'in place : correct result : x is close to -1' );
+  ok( Math.abs( v1[1] ) < Bump.SIMD_EPSILON, 'in place : correct result : y is close to 0' );
+  ok( Math.abs( v1[2] ) < Bump.SIMD_EPSILON, 'in place : correct result : z is close to 0' );
 } );
 
-test( 'angle', 7, function() {
+test( 'angle', 12, function() {
   var right = Bump.Vector3.create( 1, 0, 0 ),
   up = Bump.Vector3.create( 0, 1, 0 ),
   left = Bump.Vector3.create( -1, 0, 0 ),
   forward = Bump.Vector3.create( 0, 0, 1 ),
   upRight = Bump.Vector3.create( 1, 1, 0 );
 
-  ok( Math.abs( Bump.Vector3.angle( right, up ) - Math.PI / 2 ) < Bump.SIMD_EPSILON );
-  ok( Math.abs( Bump.Vector3.angle( right, forward ) - Math.PI / 2 ) < Bump.SIMD_EPSILON );
-  ok( Math.abs( Bump.Vector3.angle( right, left ) - Math.PI ) < Bump.SIMD_EPSILON );
-  ok( Math.abs( Bump.Vector3.angle( right, upRight ) - Math.PI / 4 ) < Bump.SIMD_EPSILON );
-  ok( Math.abs( Bump.Vector3.angle( left, upRight ) - 3 * Math.PI / 4 ) < Bump.SIMD_EPSILON );
-  ok( Math.abs( Bump.Vector3.angle( up, upRight ) - Math.PI / 4 ) < Bump.SIMD_EPSILON );
-  ok( Math.abs( Bump.Vector3.angle( forward, upRight ) - Math.PI / 2 ) < Bump.SIMD_EPSILON );
+  ok( Math.abs( Bump.Vector3.angle( right, up ) - Math.PI / 2 ) < Bump.SIMD_EPSILON,
+    'angle( right, up ) is close to pi/2' );
+  ok( Math.abs( Bump.Vector3.angle( right, forward ) - Math.PI / 2 ) < Bump.SIMD_EPSILON,
+    'angle( right, forward ) is close to pi/2' );
+  ok( Math.abs( Bump.Vector3.angle( right, left ) - Math.PI ) < Bump.SIMD_EPSILON,
+    'angle( right, left ) is close to pi' );
+  ok( Math.abs( Bump.Vector3.angle( right, upRight ) - Math.PI / 4 ) < Bump.SIMD_EPSILON,
+    'angle( right, up + right ) is close to pi/4' );
+  ok( Math.abs( Bump.Vector3.angle( left, upRight ) - 3 * Math.PI / 4 ) < Bump.SIMD_EPSILON,
+    'angle( left, up + right ) is close to 3*pi/4' );
+  ok( Math.abs( Bump.Vector3.angle( up, upRight ) - Math.PI / 4 ) < Bump.SIMD_EPSILON,
+    'angle( up, up + right ) is close to pi/4' );
+  ok( Math.abs( Bump.Vector3.angle( forward, upRight ) - Math.PI / 2 ) < Bump.SIMD_EPSILON,
+    'angle( forward, up + right ) is close to pi/2' );
+
+  deepEqual( right, Bump.Vector3.create( 1, 0, 0 ), 'right unchanged' );
+  deepEqual( up, Bump.Vector3.create( 0, 1, 0 ), 'up unchanged' );
+  deepEqual( left, Bump.Vector3.create( -1, 0, 0 ), 'left unchanged' );
+  deepEqual( forward, Bump.Vector3.create( 0, 0, 1 ), 'forward unchanged' );
+  deepEqual( upRight, Bump.Vector3.create( 1, 1, 0 ), 'up + right unchanged' );
 } );
 
 test( 'absolute', 5, function() {
@@ -183,12 +279,12 @@ test( 'absolute', 5, function() {
 
   ret = Bump.Vector3.absolute( v1, v2 );
 
-  equal( ret, v2 );
-  deepEqual( v1, Bump.Vector3.create( -1, -2, 3 ) );
-  deepEqual( v2, Bump.Vector3.create( 1, 2, 3 ) );
+  equal( ret, v2, 'with destination : return value references destination' );
+  deepEqual( v1, Bump.Vector3.create( -1, -2, 3 ), 'with destination : original unchanged' );
+  deepEqual( v2, Bump.Vector3.create( 1, 2, 3 ), 'with destination : correct result' );
 
   ret = Bump.Vector3.absolute( v1 );
 
-  equal( ret, v1 );
-  deepEqual( v1, Bump.Vector3.create( 1, 2, 3 ) );
+  equal( ret, v1, 'in place : return value references original' );
+  deepEqual( v1, Bump.Vector3.create( 1, 2, 3 ), 'in place: correct result' );
 } );
