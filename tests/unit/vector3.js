@@ -340,3 +340,109 @@ test( 'cross', 15, function() {
              Bump.Vector3.create(-1, 0, 1 )
            );
 } );
+
+test( 'triple', 2, function() {
+  equal( Bump.Vector3.triple( Bump.Vector3.create( 1, 0, 0 ),
+                              Bump.Vector3.create( 0, 1, 0 ),
+                              Bump.Vector3.create( 1, 0, 0 )
+               ),
+         0 );
+  equal( Bump.Vector3.triple( Bump.Vector3.create( 0, 0, 1 ),
+                              Bump.Vector3.create( 1, 0, 0 ),
+                              Bump.Vector3.create( 0, 1, 0 )
+               ),
+         1 );
+} );
+
+test( 'minAxis', 7, function() {
+  equal( Bump.Vector3.minAxis( Bump.Vector3.create() ), 2 );
+  equal( Bump.Vector3.minAxis( Bump.Vector3.create(1, 0, 0) ), 2 );
+  equal( Bump.Vector3.minAxis( Bump.Vector3.create(0, 1, 0) ), 2 );
+  equal( Bump.Vector3.minAxis( Bump.Vector3.create(0, 0, 1) ), 1 );
+  equal( Bump.Vector3.minAxis( Bump.Vector3.create( 0, 2, 3 ) ), 0 );
+  equal( Bump.Vector3.minAxis( Bump.Vector3.create( 0, 3, -4 ) ), 2 );
+  equal( Bump.Vector3.minAxis( Bump.Vector3.create( -1, -3, -2 ) ), 1 );
+} );
+
+test( 'maxAxis', 7, function() {
+  equal( Bump.Vector3.maxAxis( Bump.Vector3.create() ), 2 );
+  equal( Bump.Vector3.maxAxis( Bump.Vector3.create(-1, 0, 0) ), 2 );
+  equal( Bump.Vector3.maxAxis( Bump.Vector3.create(0, -1, 0) ), 2 );
+  equal( Bump.Vector3.maxAxis( Bump.Vector3.create(0, 0, -1) ), 1 );
+  equal( Bump.Vector3.maxAxis( Bump.Vector3.create( 0, 2, 3 ) ), 2 );
+  equal( Bump.Vector3.maxAxis( Bump.Vector3.create( 0, 3, -4 ) ), 1 );
+  equal( Bump.Vector3.maxAxis( Bump.Vector3.create( -1, -3, -2 ) ), 0 );
+} );
+
+test( 'furthestAxis', 7, function() {
+  equal( Bump.Vector3.furthestAxis( Bump.Vector3.create() ), 2 );
+  equal( Bump.Vector3.furthestAxis( Bump.Vector3.create(1, 0, 0) ), 2 );
+  equal( Bump.Vector3.furthestAxis( Bump.Vector3.create(0, 1, 0) ), 2 );
+  equal( Bump.Vector3.furthestAxis( Bump.Vector3.create(0, 0, 1) ), 1 );
+  equal( Bump.Vector3.furthestAxis( Bump.Vector3.create( 0, 2, 3 ) ), 0 );
+  equal( Bump.Vector3.furthestAxis( Bump.Vector3.create( 4, 1, -3 ) ), 1 );
+  equal( Bump.Vector3.furthestAxis( Bump.Vector3.create( -2, -3, -1 ) ), 2 );
+} );
+
+test( 'closestAxis', 7, function() {
+  equal( Bump.Vector3.closestAxis( Bump.Vector3.create() ), 2 );
+  equal( Bump.Vector3.closestAxis( Bump.Vector3.create(0, 1, 1) ), 2 );
+  equal( Bump.Vector3.closestAxis( Bump.Vector3.create(1, 0, 1) ), 2 );
+  equal( Bump.Vector3.closestAxis( Bump.Vector3.create(1, 1, 0) ), 1 );
+  equal( Bump.Vector3.closestAxis( Bump.Vector3.create( 0, 2, 3 ) ), 2 );
+  equal( Bump.Vector3.closestAxis( Bump.Vector3.create( 4, 1, -3 ) ), 0 );
+  equal( Bump.Vector3.closestAxis( Bump.Vector3.create( -2, -3, -1 ) ), 1 );
+} );
+
+test( 'setInterpolate3', 5, function() {
+  var right = Bump.Vector3.create( 1, 0, 0 ),
+  up = Bump.Vector3.create( 0, 1, 0 ),
+  forward = Bump.Vector3.create( 0, 0, 1 ),
+  lerped = Bump.Vector3.create(),
+  ret;
+
+  ret = Bump.Vector3.setInterpolate3( right, up, 0.5, lerped );
+  equal( ret, lerped, "with destination : return value references destination" );
+  deepEqual( right, Bump.Vector3.create( 1, 0, 0 ), "with destination : original unchanged" );
+  ok( Bump.Vector3.fuzzyZero( Bump.Vector3.subtract( lerped, Bump.Vector3.create( 0.5, 0.5, 0 ) ) ),
+      "with destination : correct result" );
+
+  ret = Bump.Vector3.setInterpolate3( up, forward, 0.3 );
+  equal( ret, up, "in place : return value references original" );
+  ok( Bump.Vector3.fuzzyZero( Bump.Vector3.subtract( up, Bump.Vector3.create( 0, 0.7, 0.3 ) ) ),
+      "with destination : correct result" );
+} );
+
+test( 'lerp', 5, function() {
+  var right = Bump.Vector3.create( 1, 0, 0 ),
+  up = Bump.Vector3.create( 0, 1, 0 ),
+  forward = Bump.Vector3.create( 0, 0, 1 ),
+  lerped = Bump.Vector3.create(),
+  ret;
+
+  ret = Bump.Vector3.lerp( right, up, 0.5, lerped );
+  equal( ret, lerped, "with destination : return value references destination" );
+  deepEqual( right, Bump.Vector3.create( 1, 0, 0 ), "with destination : original unchanged" );
+  ok( Bump.Vector3.fuzzyZero( Bump.Vector3.subtract( lerped, Bump.Vector3.create( 0.5, 0.5, 0 ) ) ),
+      "with destination : correct result" );
+
+  ret = Bump.Vector3.lerp( up, forward, 0.3 );
+  equal( ret, up, "in place : return value references original" );
+  ok( Bump.Vector3.fuzzyZero( Bump.Vector3.subtract( up, Bump.Vector3.create( 0, 0.7, 0.3 ) ) ),
+      "with destination : correct result" );
+} );
+
+test( 'equal', 4, function() {
+  ok( Bump.Vector3.equal( Bump.Vector3.create(), Bump.Vector3.create() ) );
+  ok( !Bump.Vector3.equal( Bump.Vector3.create(Bump.SIMD_EPSILON, 0, 0), Bump.Vector3.create() ) );
+  ok( !Bump.Vector3.equal( Bump.Vector3.create(0, Bump.SIMD_EPSILON, 0), Bump.Vector3.create() ) );
+  ok( !Bump.Vector3.equal( Bump.Vector3.create(0, 0, Bump.SIMD_EPSILON), Bump.Vector3.create() ) );
+} );
+
+test( 'notEqual', 4, function() {
+  ok( !Bump.Vector3.notEqual( Bump.Vector3.create(), Bump.Vector3.create() ) );
+  ok( Bump.Vector3.notEqual( Bump.Vector3.create(Bump.SIMD_EPSILON, 0, 0), Bump.Vector3.create() ) );
+  ok( Bump.Vector3.notEqual( Bump.Vector3.create(0, Bump.SIMD_EPSILON, 0), Bump.Vector3.create() ) );
+  ok( Bump.Vector3.notEqual( Bump.Vector3.create(0, 0, Bump.SIMD_EPSILON), Bump.Vector3.create() ) );
+} );
+

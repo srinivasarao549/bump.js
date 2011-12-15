@@ -223,9 +223,9 @@
 
       // Return the triple cross product between the three vectors
       triple : function( vec, vec2, vec3) {
-        return vec[0] * ( vec[1] * vec2[2] - vec[2] * vec2[1] ) +
-          vec[1] * ( vec[2] * vec2[0] - vec[0] * vec2[2] ) +
-          vec[2] * ( vec[0] * vec2[1] - vec[1] * vec2[0] );
+        return vec[0] * ( vec2[1] * vec3[2] - vec2[2] * vec3[1] ) +
+          vec[1] * ( vec2[2] * vec3[0] - vec2[0] * vec3[2] ) +
+          vec[2] * ( vec2[0] * vec3[1] - vec2[1] * vec3[0] );
       },
 
       // Return the axis with the smallest value
@@ -283,11 +283,11 @@
 
       // element-wise comparison of vectors ( note : ignores w values )
       equal : function( vec, vec2 ) {
-        return ( vec[0] == vec2[0] ) && ( vec[1] == vec2[1] ) && ( vec[0] == vec2[0] );
+        return ( vec[0] == vec2[0] ) && ( vec[1] == vec2[1] ) && ( vec[2] == vec2[2] );
       },
 
       notEqual : function( vec, vec2 ) {
-        return ( vec[0] != vec2[0] ) || ( vec[1] != vec2[1] ) || ( vec[0] != vec2[0] );
+        return ( vec[0] != vec2[0] ) || ( vec[1] != vec2[1] ) || ( vec[2] != vec2[2] );
       },
 
       // set vec's elements to be the max of its original elements and vec2's elements
