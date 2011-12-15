@@ -329,6 +329,8 @@
 
       setZero : function( vec ) {
         this.setValue( vec, 0, 0, 0 );
+
+        return vec;
       },
 
       isZero : function( vec ) {

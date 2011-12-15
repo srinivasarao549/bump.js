@@ -446,3 +446,87 @@ test( 'notEqual', 4, function() {
   ok( Bump.Vector3.notEqual( Bump.Vector3.create(0, 0, Bump.SIMD_EPSILON), Bump.Vector3.create() ) );
 } );
 
+test( 'setMax', 2, function() {
+  var v = Bump.Vector3.create( 1, 4, 9 ),
+  ret;
+
+  ret = Bump.Vector3.setMax( v, Bump.Vector3.create( 5, 1, 9 ) );
+  equal( ret, v, "return value has correct reference" );
+  deepEqual( v, Bump.Vector3.create( 5, 4, 9 ), "correct result" );
+} );
+
+test( 'setMin', 2, function() {
+  var v = Bump.Vector3.create( 1, 4, 9 ),
+  ret;
+
+  ret = Bump.Vector3.setMin( v, Bump.Vector3.create( 5, 1, 9 ) );
+  equal( ret, v, "return value has correct reference" );
+  deepEqual( v, Bump.Vector3.create( 1, 1, 9 ), "correct result" );
+} );
+
+test( 'setValue', 2, function() {
+  var v = Bump.Vector3.create( 1, 4, 9 ),
+  ret;
+
+  v[3] = 7; // w value should get set to 0 by setValue() method
+
+  ret = Bump.Vector3.setValue( v, 5, 1, 9 );
+  equal( ret, v, "return value has correct reference" );
+  deepEqual( v, Bump.Vector3.create( 5, 1, 9 ), "correct result" );
+} );
+
+test( 'getSkewSymmetricMatrix', 80, function() {
+  var v0 = Bump.Vector3.create(),
+  v1 = Bump.Vector3.create(),
+  v2 = Bump.Vector3.create(),
+  vec,
+  x,
+  y,
+  z;
+
+  for( var i = 0; i < 20; i++ ) {
+    x = Math.random();
+    y = Math.random();
+    z = Math.random();
+    vec = Bump.Vector3.create( x, y, z );
+    Bump.Vector3.getSkewSymmetricMatrix( vec, v0, v1, v2 );
+    deepEqual( vec, Bump.Vector3.create( x, y, z ), "input vector unchanged" );
+    deepEqual( v0, Bump.Vector3.create( 0, -z, y ), "matrix column 0 correct" );
+    deepEqual( v1, Bump.Vector3.create( z, 0, -x ), "matrix column 1 correct" );
+    deepEqual( v2, Bump.Vector3.create( -y, x, 0 ), "matrix column 2 correct" );
+  }
+} );
+
+test( 'setZero', 10, function() {
+  for( var i = 0; i < 5; i++ ) {
+    var v = Bump.Vector3.create( Math.random(), Math.random(), Math.random() ),
+    ret = Bump.Vector3.setZero( v );
+    equal( ret, v, 'return reference is correct' );
+    deepEqual( v, Bump.Vector3.create( 0, 0, 0 ), 'correct result' );
+  }
+} );
+
+test( 'isZero (and setZero)', 6, function() {
+  var v = Bump.Vector3.create();
+
+  ok( Bump.Vector3.isZero( v ) );
+  ok( !Bump.Vector3.isZero( Bump.Vector3.create( Bump.SIMD_EPSILON, 0, 0 ) ) );
+  ok( !Bump.Vector3.isZero( Bump.Vector3.create( 0, Bump.SIMD_EPSILON, 0 ) ) );
+  ok( !Bump.Vector3.isZero( Bump.Vector3.create( 0, 0, Bump.SIMD_EPSILON ) ) );
+
+  v = Bump.Vector3.create( Bump.SIMD_EPSILON, Bump.SIMD_EPSILON, Bump.SIMD_EPSILON );
+  ok( !Bump.Vector3.isZero( v ) );
+  Bump.Vector3.setZero( v );
+  ok( Bump.Vector3.isZero( v ) );
+
+} );
+
+test( 'fuzzyZero', 7, function() {
+  ok( Bump.Vector3.fuzzyZero( Bump.Vector3.create( 0, 0, 0 ) ) );
+  ok( !Bump.Vector3.fuzzyZero( Bump.Vector3.create( Math.sqrt( Bump.SIMD_EPSILON ), 0, 0 ) ) );
+  ok( !Bump.Vector3.fuzzyZero( Bump.Vector3.create( 0, Math.sqrt( Bump.SIMD_EPSILON ), 0 ) ) );
+  ok( !Bump.Vector3.fuzzyZero( Bump.Vector3.create( 0, 0, Math.sqrt( Bump.SIMD_EPSILON ) ) ) );
+  ok( Bump.Vector3.fuzzyZero( Bump.Vector3.create( Bump.SIMD_EPSILON, 0, 0 ) ) );
+  ok( Bump.Vector3.fuzzyZero( Bump.Vector3.create( 0, Bump.SIMD_EPSILON, 0 ) ) );
+  ok( Bump.Vector3.fuzzyZero( Bump.Vector3.create( 0, 0, Bump.SIMD_EPSILON) ) );
+} );
