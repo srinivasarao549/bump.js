@@ -288,3 +288,55 @@ test( 'absolute', 5, function() {
   equal( ret, v1, 'in place : return value references original' );
   deepEqual( v1, Bump.Vector3.create( 1, 2, 3 ), 'in place: correct result' );
 } );
+
+test( 'cross', 15, function() {
+
+  // given params for a "right", "up" and "forward" perpendicular vectors,
+  // checks cross products between them (5 tests total)
+  var crossTest = function( right, up, forward ) {
+    var rightCrossUp = Bump.Vector3.create(),
+    upCrossForward = Bump.Vector3.create(),
+    diff = Bump.Vector3.create(),
+    ret;
+
+    Bump.Vector3.safeNormalize( right );
+    Bump.Vector3.safeNormalize( up );
+    Bump.Vector3.safeNormalize( forward );
+
+    //ok( Math.abs( Bump.Vector3.length( right ) - 1) < Bump.SIMD_EPSILON );
+    //ok( Math.abs( Bump.Vector3.length( up ) - 1 ) < Bump.SIMD_EPSILON );
+    //ok( Math.abs( Bump.Vector3.length( forward ) - 1 ) < Bump.SIMD_EPSILON );
+
+    ret = Bump.Vector3.cross( right, up, rightCrossUp );
+    console.log( "( " + right + " ), ( " + up + " ), ( " + rightCrossUp + " ) " );
+    Bump.Vector3.subtract( rightCrossUp, forward, diff );
+    console.log( "( " + diff + " ) " );
+    equal( ret, rightCrossUp, "with destination : return value references destination" );
+    ok( Bump.Vector3.fuzzyZero( diff ), "right cross up : correct result" );
+
+    ret = Bump.Vector3.cross( up, forward, upCrossForward );
+    Bump.Vector3.subtract( upCrossForward, right, diff );
+    ok( Bump.Vector3.fuzzyZero( diff ), "up cross forward : correct result" );
+
+    // do the third one in place, just to make sure that works
+    ret = Bump.Vector3.cross( forward, right );
+    Bump.Vector3.subtract( forward, up, diff );
+    equal( ret, forward, "in place : return value references orginal" );
+    ok( Bump.Vector3.fuzzyZero( diff ), "forward cross right : correct result" );
+
+  }
+
+  // TODO : add more ground truths
+  crossTest( Bump.Vector3.create(1, 0, 0 ),
+             Bump.Vector3.create(0, 1, 0 ),
+             Bump.Vector3.create(0, 0, 1 )
+           );
+  crossTest( Bump.Vector3.create(1, 1, 0 ),
+             Bump.Vector3.create(-1, 1, 0 ),
+             Bump.Vector3.create(0, 0, 1 )
+           );
+  crossTest( Bump.Vector3.create(1, 0, 1 ),
+             Bump.Vector3.create(0, 1, 0 ),
+             Bump.Vector3.create(-1, 0, 1 )
+           );
+} );
