@@ -208,15 +208,20 @@
       // Otherwise, the result overwrites vec
       cross : function( vec, vec2, dest ) {
         if( !dest ) {
-          dest = vec;
-        }
-        var x = vec[1] * vec2[2] - vec[2] * vec2[1],
-        y = vec[2] * vec2[0] - vec[0] * vec2[2],
-        z = vec[0] * vec2[1] - vec[1] * vec2[0];
+          var x = vec[1] * vec2[2] - vec[2] * vec2[1],
+          y = vec[2] * vec2[0] - vec[0] * vec2[2],
+          z = vec[0] * vec2[1] - vec[1] * vec2[0];
 
-        dest[0] = x;
-        dest[1] = y;
-        dest[2] = z;
+          vec[0] = x;
+          vec[1] = y;
+          vec[2] = z;
+
+          return vec;
+        }
+
+        dest[0] = vec[1] * vec2[2] - vec[2] * vec2[1];
+        dest[1] = vec[2] * vec2[0] - vec[0] * vec2[2];
+        dest[2] = vec[0] * vec2[1] - vec[1] * vec2[0];
 
         return dest;
       },
